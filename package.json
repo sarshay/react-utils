@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "A template for building React components or utility tools for npm.",
   "type": "module",
+  "homepage": "https://github.com/sarshay/react-utils#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sarshay/react-utils.git"
+  },
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -14,7 +19,14 @@
     "react",
     "utility",
     "npm",
-    "template"
+    "template",
+    "infinite-scroll",
+    "hooks",
+    "components",
+    "local-storage",
+    "window-size",
+    "scroll-position",
+    "end-detect"
   ],
   "author": "",
   "license": "MIT",

@@ -253,4 +253,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-MIT © [Hein Soe]
+MIT © [sarshay]
