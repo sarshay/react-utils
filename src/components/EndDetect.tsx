@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, useEffect, useState } from "react";
 
 interface EndDetectProps {
@@ -8,7 +10,7 @@ interface EndDetectProps {
   style?: React.CSSProperties;
 }
 
-export const EndDetect: React.FC<EndDetectProps> = ({
+const EndDetect: React.FC<EndDetectProps> = ({
   onEnd,
   children,
   height = "200px",
@@ -58,3 +60,5 @@ export const EndDetect: React.FC<EndDetectProps> = ({
     </div>
   );
 };
+
+export default EndDetect;

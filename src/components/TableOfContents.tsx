@@ -1,8 +1,11 @@
-import React, { useContext } from 'react';
-import { ContentContext } from './Content';
+'use client';
+
+import React from "react";
+import { useContent } from "./ClientContent";
 
 interface TableOfContentsProps {
   className?: string;
+  style?: React.CSSProperties;
   headingClassNames?: {
     h1?: string;
     h2?: string;
@@ -13,38 +16,50 @@ interface TableOfContentsProps {
   };
 }
 
-export const TableOfContents: React.FC<TableOfContentsProps> = ({ 
-  className = '',
-  headingClassNames = {}
+const TableOfContents: React.FC<TableOfContentsProps> = ({
+  className,
+  style,
+  headingClassNames = {},
 }) => {
-  const context = useContext(ContentContext);
-  
-  if (!context) {
-    throw new Error('TableOfContents must be used within a Content component');
-  }
+  const { headings, scrollToHeading } = useContent();
 
-  const { headers, scrollToHeading } = context;
-
-  const getLevelClassName = (level: string) => {
+  const getLevelClassName = (level: number) => {
     const baseClass = "cursor-pointer hover:text-blue-700";
-    const levelClass = headingClassNames[level as keyof typeof headingClassNames] || '';
+    const levelClass = headingClassNames[`h${level}` as keyof typeof headingClassNames] || '';
     return `${baseClass} ${levelClass}`.trim();
   };
 
   return (
-    <ul className={className}>
-      {headers.map((h) => (
-        <li
-          key={h.id}
-          onClick={() => scrollToHeading(h.id)}
-          className={getLevelClassName(h.level)}
-          style={{
-            marginLeft: `${parseInt(h.level.charAt(1)) - 1}0px`,
-          }}
-        >
-          {h.content}
-        </li>
-      ))}
-    </ul>
+    <nav className={className} style={style}>
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        {headings.map((item, index) => (
+          <li
+            key={index}
+            style={{
+              marginLeft: `${(item.level - 1) * 20}px`,
+              marginBottom: "8px",
+            }}
+          >
+            <a
+              href={`#${item.id}`}
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToHeading(item.id);
+              }}
+              className={getLevelClassName(item.level)}
+              style={{
+                textDecoration: "none",
+                color: "#333",
+                fontSize: `${18 - (item.level - 1) * 2}px`,
+              }}
+            >
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
-}; 
+};
+
+export default TableOfContents; 
