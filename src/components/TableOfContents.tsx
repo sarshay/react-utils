@@ -34,7 +34,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({
       <ul style={{ listStyle: "none", padding: 0 }}>
         {headings.map((item, index) => (
           <li
-            key={index}
+            key={`${item.id}-${index}`}
             style={{
               marginLeft: `${(item.level - 1) * 20}px`,
               marginBottom: "8px",

@@ -40,15 +40,41 @@ const ClientContent: React.FC<ClientContentProps> = ({
 
   useEffect(() => {
     if (contentRef.current) {
-      const headings = contentRef.current.querySelectorAll("h1, h2, h3, h4, h5, h6");
-      const headingItems = Array.from(headings).map((heading) => {
-        const level = parseInt(heading.tagName[1]);
-        const text = heading.textContent || "";
-        const id = sanitizeId(text);
-        heading.id = id;
-        return { id, text, level };
+      const updateHeadings = () => {
+        const headings = contentRef.current?.querySelectorAll("h1, h2, h3, h4, h5, h6");
+        if (headings) {
+          const headingItems = Array.from(headings).map((heading) => {
+            const level = parseInt(heading.tagName[1]);
+            const text = heading.textContent || "";
+            const id = sanitizeId(text);
+            heading.id = id;
+            return { id, text, level };
+          });
+          setHeadings(headingItems);
+        }
+      };
+
+      // Initial headings update
+      updateHeadings();
+
+      // Set up MutationObserver to watch for DOM changes
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList' || mutation.type === 'characterData') {
+            updateHeadings();
+          }
+        });
       });
-      setHeadings(headingItems);
+
+      observer.observe(contentRef.current, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+
+      return () => {
+        observer.disconnect();
+      };
     }
   }, [children]);
 
