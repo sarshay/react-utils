@@ -1,21 +1,11 @@
-'use client';
-
 import React, { useRef, useEffect, useState } from "react";
 
-interface EndDetectProps {
-  onEnd: (end: boolean) => void;
-  children?: React.ReactNode | React.ReactNode[];
-  height?: string | number;
-  className?: string;
-  style?: React.CSSProperties;
-}
-
-const EndDetect: React.FC<EndDetectProps> = ({
+const EndDetect = ({
   onEnd,
   children,
-  height = "200px",
-  className = "",
-  style = {},
+}: {
+  onEnd: (end: boolean) => void;
+  children?: React.ReactNode | React.ReactNode[];
 }) => {
   const divRef = useRef<HTMLDivElement>(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
@@ -43,16 +33,15 @@ const EndDetect: React.FC<EndDetectProps> = ({
   }, [divRef.current]);
 
   useEffect(() => {
-    onEnd(isIntersecting);
-  }, [isIntersecting, onEnd]);
-
+    if (isIntersecting) {
+      onEnd(isIntersecting);
+    }
+  }, [isIntersecting]);
   return (
     <div
       ref={divRef}
-      className={className}
       style={{
-        height,
-        ...style,
+        height: "200px",
       }}
       onClick={() => onEnd(true)}
     >
