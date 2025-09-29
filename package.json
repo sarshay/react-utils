@@ -1,49 +1,17 @@
 {
-  "name": "@sarshay/react-utils",
+  "name": "react-utils-monorepo",
   "version": "0.1.2",
-  "description": "React utilities for content management",
-  "main": "dist/index.js",
-  "homepage": "https://github.com/sarshay/react-utils#readme",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/sarshay/react-utils.git"
-  },
-  "module": "dist/index.esm.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "private": true,
+  "description": "React utilities for content management - monorepo",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "test": "jest",
-    "lint": "eslint src --ext .ts,.tsx"
+    "build": "pnpm -r --filter './packages/*' build",
+    "dev": "pnpm -r --parallel dev",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "docs": "pnpm --filter docs dev",
+    "build:docs": "pnpm --filter docs build",
+    "storybook": "pnpm --filter storybook storybook",
+    "build:storybook": "pnpm --filter storybook build-storybook"
   },
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
-  },
-  "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "eslint": "^8.0.0",
-    "eslint-plugin-react": "^7.0.0",
-    "eslint-plugin-react-hooks": "^4.0.0",
-    "rollup": "^2.0.0",
-    "rollup-plugin-typescript2": "^0.31.0",
-    "typescript": "^4.0.0"
-  },
-  "keywords": [
-    "react",
-    "content",
-    "utils"
-  ],
-  "author": "",
-  "license": "MIT",
-  "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677",
-  "dependencies": {
-    "tslib": "^2.8.1"
-  }
+  "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
 }
