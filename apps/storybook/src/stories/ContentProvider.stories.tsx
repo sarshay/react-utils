@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { ClientContent, TableOfContents } from '@sarshay/react-utils';
+import { ContentProvider, TableOfContents } from '@sarshay/react-utils';
 
-const meta: Meta<typeof ClientContent> = {
-  title: 'Components/ClientContent',
-  component: ClientContent,
+const meta: Meta<typeof ContentProvider> = {
+  title: 'Components/ContentProvider',
+  component: ContentProvider,
   parameters: {
     layout: 'padded',
   },
@@ -41,7 +41,7 @@ export const Basic: Story = {
 
 export const WithTableOfContents: Story = {
   render: () => (
-    <ClientContent>
+    <ContentProvider>
       <div style={{ display: 'flex', gap: '2rem' }}>
         <div style={{ minWidth: '200px' }}>
           <h3>Table of Contents</h3>
@@ -70,7 +70,7 @@ export const WithTableOfContents: Story = {
           <p>Complete API documentation.</p>
         </div>
       </div>
-    </ClientContent>
+    </ContentProvider>
   ),
   args: {},
 };

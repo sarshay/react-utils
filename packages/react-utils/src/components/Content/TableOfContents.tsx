@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import { useContent } from "./ClientContent";
+import { useContent } from "./ContentProvider";
 
 interface TableOfContentsProps {
   className?: string;

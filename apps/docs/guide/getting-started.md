@@ -9,20 +9,24 @@ npm install @sarshay/react-utils
 ```
 
 ```jsx
-import { ClientContent, TableOfContents } from '@sarshay/react-utils'
+import { ContentProvider, TableOfContents } from '@sarshay/react-utils'
 
 function App() {
   return (
-    <div>
-      <TableOfContents />
-      <ClientContent>
-        <h1>My Content</h1>
-        <p>This heading will appear in the table of contents.</p>
-        
-        <h2>Section 1</h2>
-        <p>More content here...</p>
-      </ClientContent>
-    </div>
+    <ContentProvider>
+      <div style={{ display: 'flex' }}>
+        <aside>
+          <TableOfContents />
+        </aside>
+        <main>
+          <h1>My Content</h1>
+          <p>This heading will appear in the table of contents.</p>
+          
+          <h2>Section 1</h2>
+          <p>More content here...</p>
+        </main>
+      </div>
+    </ContentProvider>
   )
 }
 ```
@@ -30,8 +34,8 @@ function App() {
 ## What's Included
 
 ### Components
-- **ClientContent** - Wraps content and extracts headings for navigation
-- **TableOfContents** - Generates clickable navigation from headings
+- **ContentProvider** - Wraps content and extracts headings for navigation
+- **TableOfContents** - Generates clickable navigation from headings (must be inside ContentProvider)
 - **EndDetect** - Detects when users reach the end of content
 
 ### Hooks

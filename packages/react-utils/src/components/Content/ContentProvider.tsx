@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
-import { sanitizeId } from '../utils/sanitizeId';
+import { sanitizeId } from '../../utils/sanitizeId';
 
 interface Heading {
   id: string;
@@ -19,18 +19,18 @@ const ContentContext = createContext<ContentContextType | null>(null);
 export const useContent = () => {
   const context = useContext(ContentContext);
   if (!context) {
-    throw new Error('useContent must be used within a ClientContent');
+    throw new Error('useContent must be used within a ContentProvider');
   }
   return context;
 };
 
-interface ClientContentProps {
+interface ContentProviderProps {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }
 
-const ClientContent: React.FC<ClientContentProps> = ({
+const ContentProvider: React.FC<ContentProviderProps> = ({
   children,
   className,
   style,
@@ -99,4 +99,4 @@ const ClientContent: React.FC<ClientContentProps> = ({
   );
 };
 
-export default ClientContent; 
+export default ContentProvider; 
