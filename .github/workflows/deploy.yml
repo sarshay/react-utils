@@ -32,13 +32,13 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 10
           
       - name: Install dependencies
         run: pnpm install
         
-      - name: Build library
-        run: pnpm run build
+      - name: Build library first
+        run: pnpm --filter @sarshay/react-utils build
         
       - name: Build all sites
         run: |

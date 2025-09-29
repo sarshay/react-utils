@@ -10,7 +10,7 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Components', link: '/components/client-content' },
       { text: 'Hooks', link: '/hooks/use-window-size' },
-      { text: 'Storybook', link: 'https://your-username.github.io/react-utils/storybook/' }
+      { text: 'Storybook', link: 'https://sarshay.github.io/react-utils/storybook/' }
     ],
 
     sidebar: {
