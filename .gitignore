@@ -10,6 +10,16 @@ coverage
 dist
 build
 
+# VitePress build output
+apps/docs/.vitepress/dist
+apps/docs/.vitepress/cache
+
+# Storybook build output  
+apps/storybook/storybook-static
+
+# Demo build output
+dist-demo
+
 # Misc
 .DS_Store
 .env.local
