@@ -1,0 +1,43 @@
+{
+  "name": "@sarshay/react-utils",
+  "version": "0.1.3",
+  "description": "React utilities for content management",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "jest",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "eslint-plugin-react-hooks": "^4.0.0",
+    "rollup": "^2.0.0",
+    "rollup-plugin-typescript2": "^0.31.0",
+    "typescript": "^4.0.0"
+  },
+  "keywords": [
+    "react",
+    "content",
+    "utils"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "tslib": "^2.8.1"
+  }
+}
