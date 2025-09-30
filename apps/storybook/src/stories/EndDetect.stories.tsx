@@ -337,6 +337,7 @@ export const CustomStyling: Story = {
             pointerEvents: 'none'
           }} />
         </div>
+        </EndDetect>
         
         <div style={{ height: '200px', padding: '2rem', background: '#e8f4f8' }}>
           <p>Content continues after the EndDetect component...</p>
