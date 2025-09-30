@@ -11,7 +11,7 @@ hero:
       link: /guide/getting-started
     - theme: alt
       text: View Components
-      link: https://your-username.github.io/react-utils/storybook/
+      link: https://sarshay.github.io/react-utils/storybook/
 
 features:
   - title: 📑 Smart Table of Contents

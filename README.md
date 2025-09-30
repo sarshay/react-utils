@@ -1,94 +1,127 @@
 # @sarshay/react-utils
 
-React utilities for content management with table of contents support.
+A comprehensive collection of React utilities and components for modern web applications, featuring content management, viewport detection, local storage handling, and URL query parameter management.
 
-## Installation
+## 🚀 Features
+
+- **Content Management** - Automatic table of contents generation and content navigation
+- **Viewport Detection** - Intersection Observer-based end detection for infinite scrolling
+- **Local Storage** - Type-safe localStorage with cross-tab synchronization
+- **URL Management** - Query parameter handling with automatic type conversion
+- **Window Utilities** - Window size and scroll position tracking
+- **TypeScript First** - Full TypeScript support with comprehensive type definitions
+
+## 📦 Installation
 
 ```bash
+# npm
+npm install @sarshay/react-utils
+
+# yarn
+yarn add @sarshay/react-utils
+
+# pnpm
 pnpm add @sarshay/react-utils
 ```
 
-## Usage
+## 🌐 Homepage
 
-### Basic Usage
+**[📖 Visit Documentation & Examples](https://sarshay.github.io/react-utils)**
 
-```tsx
-'use client';
-import { ClientContent, TableOfContents } from "@sarshay/react-utils";
+## 📚 Components
 
-const Body = () => {
-    return (
-        <ClientContent>
-            <div className="flex">
-                <div className="flex-1">
-                    <h1>Main Title</h1>
-                    <p>Some introductory text...</p>
-                    
-                    <h2>First Section</h2>
-                    <p>Content for the first section...</p>
-                    
-                    <h3>Subsection</h3>
-                    <p>More detailed content...</p>
-                    
-                    <h2>Second Section</h2>
-                    <p>Content for the second section...</p>
-                </div>
-                <div>
-                    <div className="sticky top-0 max-h-dvh overflow-y-auto w-64 p-4 bg-gray-100">
-                        <TableOfContents />
-                    </div>
-                </div>
-            </div>
-        </ClientContent>
-    );
-}
+### ContentProvider & TableOfContents
+Automatically generates a table of contents from heading elements and provides smooth navigation.
 
-export default Body;
+### EndDetect
+Detects when a component enters the viewport, perfect for infinite scrolling and analytics.
+
+## 🪝 Hooks
+
+### useLocalStorage
+Type-safe localStorage with cross-tab synchronization and error handling.
+
+### useQuery
+Manage URL query parameters with automatic type conversion and nested object support.
+
+### useWindowSize
+Track window dimensions with automatic updates on resize.
+
+### useScrollPosition
+Monitor window scroll position for scroll-based interactions.
+
+## 📖 Documentation
+
+Comprehensive documentation is available in the `/apps/docs` directory:
+
+- [Hooks Documentation](./apps/docs/hooks/)
+  - [useLocalStorage](./apps/docs/hooks/use-local-storage.md)
+  - [useQuery](./apps/docs/hooks/use-query.md)
+  - [useWindowSize](./apps/docs/hooks/use-window-size.md)
+  - [useScrollPosition](./apps/docs/hooks/use-scroll-position.md)
+- [Components Documentation](./apps/docs/components/)
+  - [EndDetect](./apps/docs/components/end-detect.md)
+
+
+## 🛠️ Development
+
+```bash
+# Clone the repository
+git clone https://github.com/sarshay/react-utils.git
+
+# Install dependencies
+pnpm install
+
+# Build the package
+pnpm build
+
+# Run Storybook
+cd apps/storybook && pnpm dev
+
+# Run tests
+pnpm test
 ```
 
-### TableOfContents with Custom Styling
+## 📋 API Reference
 
-```tsx
-<TableOfContents 
-  headingClassNames={{
-    h1: "font-bold text-xl",
-    h2: "font-semibold text-lg",
-    h3: "text-base",
-    h4: "text-sm",
-    h5: "text-xs",
-    h6: "text-xs text-gray-600"
-  }}
-/>
-```
+### Components
 
-## Components
+| Component | Description |
+|-----------|-------------|
+| `ContentProvider` | Provides context for content management and TOC generation |
+| `TableOfContents` | Renders an interactive table of contents |
+| `EndDetect` | Intersection Observer-based viewport detection |
 
-### ClientContent
+### Hooks
 
-The main wrapper component that provides context for the table of contents.
+| Hook | Description |
+|------|-------------|
+| `useLocalStorage<T>` | Type-safe localStorage with cross-tab sync |
+| `useQuery<T>` | URL query parameter management |
+| `useWindowSize` | Window dimensions tracking |
+| `useScrollPosition` | Scroll position monitoring |
+| `useContent` | Access content context (used with ContentProvider) |
 
-Props:
-- `children`: React.ReactNode
-- `className?: string`
-- `style?: React.CSSProperties`
+### Utilities
 
-### TableOfContents
+| Function | Description |
+|----------|-------------|
+| `sanitizeId` | Converts text to URL-safe IDs |
 
-Renders a table of contents based on the headings in your content.
+## 🔧 TypeScript Support
 
-Props:
-- `className?: string`
-- `style?: React.CSSProperties`
-- `headingClassNames?: { h1?: string; h2?: string; h3?: string; h4?: string; h5?: string; h6?: string; }`
+Full TypeScript support with comprehensive type definitions.
 
-## Features
+## 📄 License
 
-- Automatic heading detection and ID generation
-- Smooth scrolling to headings
-- Customizable styling for each heading level
-- Responsive design support
-- Sticky table of contents support
+MIT License - see [LICENSE](./LICENSE) for details.
 
-## License
+## 🤝 Contributing
 
-MIT
+Contributions are welcome! Please read our contributing guidelines and submit pull requests to our repository.
+
+## 📞 Support
+
+- 📧 Issues: [GitHub Issues](https://github.com/sarshay/react-utils/issues)
+- 📚 Documentation: [GitHub Pages](https://sarshay.github.io/react-utils)
+- 💬 Discussions: [GitHub Discussions](https://github.com/sarshay/react-utils/discussions)

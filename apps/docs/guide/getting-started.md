@@ -56,4 +56,3 @@ function App() {
 - [Installation Guide](/guide/installation) - Detailed setup instructions
 - [Components](/components/client-content) - Learn about each component
 - [Hooks](/hooks/use-window-size) - Explore available hooks
-- [Live Demo](https://your-username.github.io/react-utils/demo/) - See it in action
