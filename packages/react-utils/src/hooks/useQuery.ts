@@ -8,7 +8,7 @@ import { useCallback, useMemo, useState, useEffect } from "react";
  * @param defaultValue - Default value to return when no query parameters exist
  * @returns [query, setQuery] - Current query object and setter function
  */
-export const useQuery = <T = any>(defaultValue?: T) => {
+export const useUrlQuery = <T = any>(defaultValue?: T) => {
   const [url, setUrl] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.location.href;

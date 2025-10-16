@@ -41,7 +41,7 @@ Detects when a component enters the viewport, perfect for infinite scrolling and
 ### useLocalStorage
 Type-safe localStorage with cross-tab synchronization and error handling.
 
-### useQuery
+### useUrlQuery
 Manage URL query parameters with automatic type conversion and nested object support.
 
 ### useWindowSize
@@ -56,7 +56,7 @@ Comprehensive documentation is available in the `/apps/docs` directory:
 
 - [Hooks Documentation](./apps/docs/hooks/)
   - [useLocalStorage](./apps/docs/hooks/use-local-storage.md)
-  - [useQuery](./apps/docs/hooks/use-query.md)
+  - [useUrlQuery](./apps/docs/hooks/use-query.md)
   - [useWindowSize](./apps/docs/hooks/use-window-size.md)
   - [useScrollPosition](./apps/docs/hooks/use-scroll-position.md)
 - [Components Documentation](./apps/docs/components/)
@@ -97,7 +97,7 @@ pnpm test
 | Hook | Description |
 |------|-------------|
 | `useLocalStorage<T>` | Type-safe localStorage with cross-tab sync |
-| `useQuery<T>` | URL query parameter management |
+| `useUrlQuery<T>` | URL query parameter management |
 | `useWindowSize` | Window dimensions tracking |
 | `useScrollPosition` | Scroll position monitoring |
 | `useContent` | Access content context (used with ContentProvider) |

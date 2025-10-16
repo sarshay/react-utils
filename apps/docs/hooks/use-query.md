@@ -1,14 +1,14 @@
-# useQuery
+# useUrlQuery
 
 A React hook that manages URL query parameters with automatic parsing, type conversion, and browser history integration.
 
 ## Usage
 
 ```jsx
-import { useQuery } from '@sarshay/react-utils'
+import { useUrlQuery } from '@sarshay/react-utils'
 
 function SearchPage() {
-  const [query, setQuery] = useQuery({ 
+  const [query, setQuery] = useUrlQuery({ 
     search: '', 
     page: 1, 
     filters: [] 
@@ -29,7 +29,7 @@ function SearchPage() {
 ## Parameters
 
 ```typescript
-useQuery<T>(defaultValue?: T)
+useUrlQuery<T>(defaultValue?: T)
 ```
 
 - **defaultValue** - Optional default value when no query parameters exist
@@ -72,7 +72,7 @@ The hook automatically converts query parameter values:
 
 ```jsx
 function ProductList() {
-  const [query, setQuery] = useQuery({
+  const [query, setQuery] = useUrlQuery({
     search: '',
     page: 1,
     category: 'all',
@@ -122,7 +122,7 @@ function ProductList() {
 
 ```jsx
 function AdvancedSearch() {
-  const [query, setQuery] = useQuery({
+  const [query, setQuery] = useUrlQuery({
     filters: {
       priceRange: { min: 0, max: 1000 },
       tags: [],
@@ -188,7 +188,7 @@ function AdvancedSearch() {
 
 ```jsx
 function DataTable() {
-  const [query, setQuery] = useQuery({
+  const [query, setQuery] = useUrlQuery({
     sort: { column: 'name', direction: 'asc' },
     page: 1,
     pageSize: 10
@@ -226,7 +226,7 @@ function DataTable() {
 
 ```jsx
 function ContactForm() {
-  const [query, setQuery] = useQuery({
+  const [query, setQuery] = useUrlQuery({
     name: '',
     email: '',
     subject: '',
