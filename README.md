@@ -56,7 +56,7 @@ Comprehensive documentation is available in the `/apps/docs` directory:
 
 - [Hooks Documentation](./apps/docs/hooks/)
   - [useLocalStorage](./apps/docs/hooks/use-local-storage.md)
-  - [useUrlQuery](./apps/docs/hooks/use-query.md)
+  - [useUrlQuery](./apps/docs/hooks/use-url-query.md)
   - [useWindowSize](./apps/docs/hooks/use-window-size.md)
   - [useScrollPosition](./apps/docs/hooks/use-scroll-position.md)
 - [Components Documentation](./apps/docs/components/)
