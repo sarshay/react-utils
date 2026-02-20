@@ -6,6 +6,7 @@ on:
     paths:
       - 'packages/react-utils/package.json'
       - 'packages/react-utils/src/**'
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
   check-version:
