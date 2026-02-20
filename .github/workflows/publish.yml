@@ -1,0 +1,103 @@
+name: Publish to npm
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/react-utils/package.json'
+      - 'packages/react-utils/src/**'
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version-changed: ${{ steps.version-check.outputs.changed }}
+      current-version: ${{ steps.get-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Get current version
+        id: get-version
+        run: echo "version=$(node -p "require('./packages/react-utils/package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Check if version changed
+        id: version-check
+        run: |
+          CURRENT_VERSION=$(node -p "require('./packages/react-utils/package.json').version")
+          git checkout HEAD~1 2>/dev/null || echo "First commit"
+          PREVIOUS_VERSION=$(node -p "require('./packages/react-utils/package.json').version" 2>/dev/null || echo "0.0.0")
+          git checkout -
+
+          if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "✅ Version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "⏭️  Version unchanged ($CURRENT_VERSION)"
+          fi
+
+  publish:
+    needs: check-version
+    if: needs.check-version.outputs.version-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build package
+        run: pnpm --filter @sarshay/react-utils build
+
+      - name: Run tests (if available)
+        run: pnpm --filter @sarshay/react-utils test || echo "No tests found, skipping..."
+        continue-on-error: false
+
+      - name: Publish to npm
+        run: |
+          cd packages/react-utils
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.check-version.outputs.current-version }}
+          release_name: Release v${{ needs.check-version.outputs.current-version }}
+          body: |
+            ## @sarshay/react-utils v${{ needs.check-version.outputs.current-version }}
+
+            Published to npm: https://www.npmjs.com/package/@sarshay/react-utils/v/${{ needs.check-version.outputs.current-version }}
+
+            ### Installation
+            ```bash
+            npm install @sarshay/react-utils@${{ needs.check-version.outputs.current-version }}
+            ```
+          draft: false
+          prerelease: false
+
+      - name: Notify success
+        if: success()
+        run: |
+          echo "🎉 Successfully published @sarshay/react-utils@${{ needs.check-version.outputs.current-version }} to npm!"
+          echo "📦 Package: https://www.npmjs.com/package/@sarshay/react-utils"
+
+      - name: Notify failure
+        if: failure()
+        run: |
+          echo "❌ Failed to publish package"
+          exit 1

@@ -1,6 +1,6 @@
 # useUrlQuery
 
-A React hook that manages URL query parameters with automatic parsing, type conversion, and browser history integration.
+A production-ready React hook that manages URL query parameters with automatic parsing, type conversion, security protections, and browser history integration.
 
 ## Usage
 
@@ -8,18 +8,22 @@ A React hook that manages URL query parameters with automatic parsing, type conv
 import { useUrlQuery } from '@sarshay/react-utils'
 
 function SearchPage() {
-  const [query, setQuery] = useUrlQuery({ 
-    search: '', 
-    page: 1, 
-    filters: [] 
+  const [query, setQuery] = useUrlQuery({
+    search: '',
+    page: 1,
+    filters: []
   })
-  
+
   return (
     <div>
       <p>Search: {query.search}</p>
       <p>Page: {query.page}</p>
       <button onClick={() => setQuery({ ...query, page: query.page + 1 })}>
         Next Page
+      </button>
+      {/* Replace mode - doesn't add to browser history */}
+      <button onClick={() => setQuery({ ...query, page: 1 }, { replace: true })}>
+        Reset Page
       </button>
     </div>
   )
@@ -32,38 +36,78 @@ function SearchPage() {
 useUrlQuery<T>(defaultValue?: T)
 ```
 
-- **defaultValue** - Optional default value when no query parameters exist
+- **defaultValue** - Optional default values that will be **merged** with URL parameters
 
 ## Return Value
 
 ```typescript
-[query: T, setQuery: (newQuery: T | null) => void]
+[query: T, setQuery: (newQuery: T | null, options?: SetQueryOptions) => void]
 ```
 
 Returns a tuple with:
-- **query** - Current parsed query parameters object
-- **setQuery** - Function to update query parameters (pass `null` to clear all)
+- **query** - Current parsed query parameters merged with defaults
+- **setQuery** - Function to update query parameters
+  - Pass `null` to clear all parameters
+  - Pass `{ replace: true }` as second argument to replace instead of push
 
 ## Features
 
 - **Automatic type conversion** - Converts strings to numbers, booleans, null, undefined
 - **Nested objects & arrays** - Supports complex data structures with bracket notation
-- **Browser history integration** - Uses `pushState` for seamless navigation
+- **Default value merging** - URL params override defaults, but defaults are preserved for missing keys
+- **Replace mode** - Option to replace history entry instead of adding new one
+- **Security protections** - Input validation, overflow prevention, DoS protection
+- **Browser history integration** - Uses `pushState`/`replaceState` for seamless navigation
 - **SSR safe** - Handles server-side rendering environments
 - **Real-time sync** - Automatically updates when URL changes (back/forward buttons)
 - **Type-safe** - Full TypeScript support with generics
+
+## What's New in v2.0
+
+### 🔒 Security Enhancements
+- **Input length validation** - Protects against DoS via huge query params (max 1000 chars)
+- **Number overflow protection** - Only converts safe integers to numbers
+- **Array index overflow prevention** - Rejects array indices > 9999
+- **parseInt radix** - Always uses radix 10 to prevent octal interpretation
+
+### 🎯 Default Value Merging
+Previously, defaults were only used when *no* URL params existed. Now defaults are **merged** with URL params:
+
+```jsx
+const [query] = useUrlQuery({ page: 1, limit: 10, sort: 'name' });
+// URL: ?page=5
+// Old behavior: { page: 5 }            ❌ Lost defaults!
+// New behavior: { page: 5, limit: 10, sort: 'name' } ✅
+```
+
+### ⚡ Replace Mode
+Avoid polluting browser history with temporary state changes:
+
+```jsx
+setQuery({ page: 2 });                    // Adds to history (default)
+setQuery({ page: 2 }, { replace: true }); // Replaces current entry
+```
 
 ## Type Conversion
 
 The hook automatically converts query parameter values:
 
 ```
-"123"       → 123
-"true"      → true
-"false"     → false
+"123"       → 123 (number)
+"29.99"     → 29.99 (number)
+"true"      → true (boolean)
+"false"     → false (boolean)
 "null"      → null
 "undefined" → undefined
-"hello"     → "hello"
+"hello"     → "hello" (string)
+```
+
+### Security-Protected Conversions
+
+```
+"999999999999999999999" → "999999999999999999999" (string, not number - overflow protection)
+"9007199254740991"      → 9007199254740991 (number, safe integer)
+"a".repeat(2000)        → kept as string (> 1000 chars limit)
 ```
 
 ## Examples
@@ -222,6 +266,33 @@ function DataTable() {
 }
 ```
 
+### Tab Navigation with Replace Mode
+
+```jsx
+function TabPanel() {
+  const [query, setQuery] = useUrlQuery({ tab: 'overview', section: 'general' })
+
+  // Use replace mode for tabs to avoid polluting history
+  const switchTab = (tab) => {
+    setQuery({ ...query, tab }, { replace: true })
+  }
+
+  return (
+    <div>
+      <nav>
+        <button onClick={() => switchTab('overview')}>Overview</button>
+        <button onClick={() => switchTab('settings')}>Settings</button>
+        <button onClick={() => switchTab('profile')}>Profile</button>
+      </nav>
+
+      {query.tab === 'overview' && <Overview />}
+      {query.tab === 'settings' && <Settings />}
+      {query.tab === 'profile' && <Profile />}
+    </div>
+  )
+}
+```
+
 ### Form State in URL
 
 ```jsx
@@ -232,11 +303,12 @@ function ContactForm() {
     subject: '',
     priority: 'normal'
   })
-  
+
+  // Use replace mode for form fields to avoid history spam
   const updateField = (field, value) => {
-    setQuery({ ...query, [field]: value })
+    setQuery({ ...query, [field]: value }, { replace: true })
   }
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -247,7 +319,7 @@ function ContactForm() {
       console.error('Submission failed:', error)
     }
   }
-  
+
   return (
     <form onSubmit={handleSubmit}>
       <input
@@ -262,7 +334,7 @@ function ContactForm() {
         value={query.email}
         onChange={(e) => updateField('email', e.target.value)}
       />
-      <select 
+      <select
         value={query.priority}
         onChange={(e) => updateField('priority', e.target.value)}
       >

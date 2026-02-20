@@ -6,4 +6,6 @@ export { useContent } from './components/Content/ContentProvider';
 export { sanitizeId } from './utils/sanitizeId';
 export { useWindowSize } from './hooks/useWindowSize';
 export { useScrollPosition } from './hooks/useScrollPosition';
-export { useLocalStorage } from './hooks/useLocalStorage'; 
+export { useLocalStorage } from './hooks/useLocalStorage';
+export { useUrlQuery, paramsObject } from './hooks/useUrlQuery';
+export type { SetQueryOptions } from './hooks/useUrlQuery'; 
