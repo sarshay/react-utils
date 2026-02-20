@@ -1,6 +1,6 @@
 {
   "name": "@sarshay/react-utils",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "React utilities for content management",
   "main": "dist/index.js",
   "homepage": "https://sarshay.github.io/react-utils/",
