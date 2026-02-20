@@ -1,6 +1,6 @@
 {
   "name": "react-utils-monorepo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "React utilities for content management - monorepo",
   "scripts": {
