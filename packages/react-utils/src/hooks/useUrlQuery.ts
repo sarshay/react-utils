@@ -1,12 +1,38 @@
+"use client"
 import { useCallback, useMemo, useState, useEffect } from "react";
 
+export interface SetQueryOptions {
+  /**
+   * If true, replaces current history entry instead of adding a new one
+   * @default false
+   */
+  replace?: boolean;
+}
 
 /**
  * Hook for managing URL query parameters with automatic parsing and updating
- * 
+ *
+ * Features:
+ * - Automatic type conversion (number, boolean, null, undefined)
+ * - Nested object/array support with bracket notation
+ * - Security protections (overflow prevention, input validation)
+ * - Default value merging
+ * - SSR-safe
+ *
  * @template T - Type for the query parameters object
- * @param defaultValue - Default value to return when no query parameters exist
+ * @param defaultValue - Default values to merge with parsed query parameters
  * @returns [query, setQuery] - Current query object and setter function
+ *
+ * @example
+ * ```tsx
+ * const [query, setQuery] = useUrlQuery({ page: 1, limit: 10 });
+ * // URL: ?page=5
+ * // query = { page: 5, limit: 10 } // Defaults are preserved
+ *
+ * setQuery({ page: 2 }); // Pushes new history entry
+ * setQuery({ page: 2 }, { replace: true }); // Replaces current entry
+ * setQuery(null); // Clears all query params
+ * ```
  */
 export const useUrlQuery = <T = any>(defaultValue?: T) => {
   const [url, setUrl] = useState(() => {
@@ -35,26 +61,30 @@ export const useUrlQuery = <T = any>(defaultValue?: T) => {
     return window.location.pathname;
   }, [url]);
 
-  // Parse current URL params into object using existing utility
+  // Parse current URL params into object and merge with defaults
   const query = useMemo(() => {
     const parsed = paramsObject(searchParams) as T;
-    
-    // If no params exist and defaultValue is provided, return defaultValue
-    if (Object.keys(parsed as object).length === 0 && defaultValue !== undefined) {
-      return defaultValue;
+
+    // Merge defaults with parsed params (parsed params override defaults)
+    if (defaultValue !== undefined) {
+      return { ...defaultValue, ...parsed } as T;
     }
-    
+
     return parsed;
   }, [searchParams, defaultValue]);
 
   // Function to update query parameters
-  const setQuery = useCallback((newQuery: T | null) => {
+  const setQuery = useCallback((newQuery: T | null, options?: SetQueryOptions) => {
     if (typeof window === 'undefined') return;
 
     if (newQuery === null) {
       // Clear all query parameters
       const newUrl = pathname;
-      window.history.pushState({}, '', newUrl);
+      if (options?.replace) {
+        window.history.replaceState({}, '', newUrl);
+      } else {
+        window.history.pushState({}, '', newUrl);
+      }
       setUrl(window.location.href);
       return;
     }
@@ -84,31 +114,72 @@ export const useUrlQuery = <T = any>(defaultValue?: T) => {
     // Navigate to new URL with updated query params
     const queryString = params.toString();
     const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
-    window.history.pushState({}, '', newUrl);
+    if (options?.replace) {
+      window.history.replaceState({}, '', newUrl);
+    } else {
+      window.history.pushState({}, '', newUrl);
+    }
     setUrl(window.location.href);
   }, [pathname]);
 
   return [query, setQuery] as const;
 };
 
+/**
+ * Converts URLSearchParams to a nested object with automatic type conversion
+ *
+ * Features:
+ * - Automatic type conversion (number, boolean, null, undefined)
+ * - Nested object/array support with bracket notation (e.g., `filters[status]=active`)
+ * - Security protections:
+ *   - Input length validation (max 1000 chars per param)
+ *   - Number overflow protection (safe integer check)
+ *   - Array index overflow prevention (max index 9999)
+ *   - parseInt radix specification
+ *
+ * @param params - URLSearchParams to convert
+ * @returns Parsed object with typed values
+ *
+ * @example
+ * ```tsx
+ * const params = new URLSearchParams('page=5&active=true&filters[status]=approved');
+ * const obj = paramsObject(params);
+ * // { page: 5, active: true, filters: { status: 'approved' } }
+ * ```
+ */
 export const paramsObject = (params: URLSearchParams) => {
   if (!params || params.toString().length === 0) return {};
 
-  // Helper function to convert string values to appropriate types
+  // Helper function to convert string values to appropriate types with security protections
   const convertValue = (value: string): any => {
-    // Try to convert to number
-    if (!isNaN(Number(value)) && value.trim() !== '') {
-      return Number(value);
+    // Input validation and sanitization - prevent DoS via huge query params
+    if (typeof value !== 'string' || value.length > 1000) {
+      return value; // Return as-is if invalid or too long
     }
+
+    const trimmed = value.trim();
+    if (trimmed === '') return '';
+
+    // Try to convert to number with overflow protection
+    if (!isNaN(Number(trimmed)) && trimmed !== '') {
+      const num = Number(trimmed);
+      // Check for safe integer range to prevent overflow
+      if (Number.isSafeInteger(num)) {
+        return num;
+      }
+      // Return as string if number is too large to safely handle
+      return trimmed;
+    }
+
     // Try to convert to boolean
-    if (value === 'true') return true;
-    if (value === 'false') return false;
+    if (trimmed === 'true') return true;
+    if (trimmed === 'false') return false;
     // Try to convert to null
-    if (value === 'null') return null;
+    if (trimmed === 'null') return null;
     // Try to convert to undefined
-    if (value === 'undefined') return undefined;
+    if (trimmed === 'undefined') return undefined;
     // Return as string if no conversion possible
-    return value;
+    return trimmed;
   };
 
   const obj: any = {};
@@ -158,9 +229,13 @@ export const paramsObject = (params: URLSearchParams) => {
     // Set the final value
     const finalKey = keys[keys.length - 1];
     if (/^\d+$/.test(finalKey)) {
-      const idx = parseInt(finalKey);
-      if (!Array.isArray(current)) current = [];
-      current[idx] = convertValue(value);
+      const idx = parseInt(finalKey, 10); // Always specify radix for parseInt
+      // Prevent array index overflow attacks - limit to reasonable array size
+      if (idx >= 0 && idx < 10000) {
+        if (!Array.isArray(current)) current = [];
+        current[idx] = convertValue(value);
+      }
+      // Silently ignore indices that are too large (security protection)
     } else {
       current[finalKey] = convertValue(value);
     }
